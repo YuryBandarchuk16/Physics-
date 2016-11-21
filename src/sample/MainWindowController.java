@@ -15,13 +15,12 @@ public class MainWindowController {
     @FXML
     private static Canvas canvas;
 
-    /*
+
     public static void initCanvas() {
         GraphicsContext graphicsContext = canvas.getGraphicsContext2D();
         graphicsContext.setFill(Color.WHITE);
         graphicsContext.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
     }
-    */
 
     @FXML
     private Button backButton;
