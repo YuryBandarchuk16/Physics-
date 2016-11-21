@@ -10,10 +10,20 @@ import javafx.scene.control.Button;
 public class MainMenuController {
 
     @FXML
-    private Button dynamicsButton;
+    private Button exitButton, startButton, aboutButton;
 
     @FXML
-    public void dynamicsButtonClicked() {
+    private void startButtonClicked() {
         Main.runDynamics();
+    }
+
+    @FXML
+    private void aboutButtonClicked() {
+
+    }
+
+    @FXML
+    private void exitButtonClicked() {
+        Main.close();
     }
 }
