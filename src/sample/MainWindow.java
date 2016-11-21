@@ -21,6 +21,7 @@ public class MainWindow extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());
         MainWindow.primaryStage = primaryStage;
+        //MainWindowController.initCanvas();
     }
 
     public static void main(String[] args) {
@@ -31,4 +32,14 @@ public class MainWindow extends Application {
         primaryStage.close();
     }
 
+    public static void runMain() {
+        Platform.runLater(() -> {
+            try {
+                new Main().start(new Stage());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        close();
+    }
 }

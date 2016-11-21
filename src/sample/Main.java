@@ -33,10 +33,10 @@ public class Main extends Application {
         primaryStage.close();
     }
 
-    public static void runDynamics() {
+    public static void runMainWindow() {
         Platform.runLater(() -> {
             try {
-                new DynamicsWindow().start(new Stage());
+                new MainWindow().start(new Stage());
             } catch (Exception e) {
                 e.printStackTrace();
             }

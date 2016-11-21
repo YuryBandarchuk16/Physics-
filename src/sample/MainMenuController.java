@@ -14,7 +14,7 @@ public class MainMenuController {
 
     @FXML
     private void startButtonClicked() {
-        Main.runDynamics();
+        Main.runMainWindow();
     }
 
     @FXML
