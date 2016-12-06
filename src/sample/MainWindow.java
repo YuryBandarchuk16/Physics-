@@ -7,10 +7,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.awt.*;
+
 /**
  * Created by Viktoria on 21.11.16.
  */
 public class MainWindow extends Application {
+
+    private static SandBox sandBox;
     private static Stage primaryStage;
 
     @Override
@@ -21,7 +25,8 @@ public class MainWindow extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());
         MainWindow.primaryStage = primaryStage;
-        //MainWindowController.initCanvas();
+        sandBox = new SandBox(new Dimension(800, 800));
+        sandBox.start();
     }
 
     public static void main(String[] args) {
@@ -40,6 +45,7 @@ public class MainWindow extends Application {
                 e.printStackTrace();
             }
         });
+        sandBox.close();
         close();
     }
 }
