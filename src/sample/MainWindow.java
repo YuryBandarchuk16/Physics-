@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import sample.matchParser.MatchParser;
 
 import java.awt.*;
 
@@ -14,7 +15,7 @@ import java.awt.*;
  */
 public class MainWindow extends Application {
 
-    private static SandBox sandBox;
+    public static SandBox sandBox;
     private static Stage primaryStage;
 
     @Override
@@ -25,7 +26,7 @@ public class MainWindow extends Application {
         primaryStage.show();
         primaryStage.setOnCloseRequest(e -> Platform.exit());
         MainWindow.primaryStage = primaryStage;
-        sandBox = new SandBox(new Dimension(800, 800));
+        sandBox = new SandBox(new Dimension(800, 800), new MatchParser());
         sandBox.start();
     }
 
