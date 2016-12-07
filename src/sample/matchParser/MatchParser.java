@@ -134,7 +134,7 @@ public class MatchParser {
 
         return new Result(dPart, restPart);
     }
-    
+
     private Result processFunction(String func, Result r) {
         if (func.equals("sin")) {
             return new Result(Math.sin(r.acc), r.rest);
@@ -142,6 +142,14 @@ public class MatchParser {
             return new Result(Math.cos(r.acc), r.rest);
         } else if (func.equals("tan")) {
             return new Result(Math.tan(r.acc), r.rest);
+        } else if (func.equals("sqrt")) {
+            return new Result(Math.sqrt(r.acc), r.rest);
+        } else if (func.equals("sqr")) {
+            return new Result(r.acc * r.acc, r.rest);
+        } else if (func.equals("cube")) {
+            return new Result(r.acc * r.acc * r.acc, r.rest);
+        } else if (func.equals("ln")) {
+            return new Result(Math.log(r.acc), r.rest);
         } else {
             System.err.println("function '" + func + "' is not defined");
         }
