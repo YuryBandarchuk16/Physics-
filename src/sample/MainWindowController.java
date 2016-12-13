@@ -21,6 +21,8 @@ import sample.matchParser.ParserRunner;
 
 public class MainWindowController {
 
+    public static double G = 9.8;
+
     private void createAlert(String textButton, String text) {
         Stage dialogStage = new Stage();
         dialogStage.initModality(Modality.WINDOW_MODAL);
@@ -63,7 +65,9 @@ public class MainWindowController {
         }
         ParserRunner.setText(currentText);
         MainWindow.sandBox.graphIsReadyToBeDrawn = true;
+        MainWindow.sandBox.reInit();
         MainWindow.sandBox.repaint();
+        MainWindow.sandBox.balls.clear();
     }
 
     @FXML

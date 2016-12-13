@@ -150,6 +150,8 @@ public class MatchParser {
             return new Result(r.acc * r.acc * r.acc, r.rest);
         } else if (func.equals("ln")) {
             return new Result(Math.log(r.acc), r.rest);
+        } else if (func.equals("abs")) {
+            return new Result(Math.abs(r.acc), r.rest);
         } else {
             System.err.println("function '" + func + "' is not defined");
         }

@@ -17,6 +17,7 @@ public class MainWindow extends Application {
 
     public static SandBox sandBox;
     private static Stage primaryStage;
+    private static Thread mainThread;
 
     @Override
     public void start(Stage primaryStage) throws Exception{
@@ -27,7 +28,8 @@ public class MainWindow extends Application {
         primaryStage.setOnCloseRequest(e -> Platform.exit());
         MainWindow.primaryStage = primaryStage;
         sandBox = new SandBox(new Dimension(800, 800), new MatchParser());
-        sandBox.start();
+        mainThread = new Thread(sandBox);
+        mainThread.start();
     }
 
     public static void main(String[] args) {
@@ -47,6 +49,7 @@ public class MainWindow extends Application {
             }
         });
         sandBox.close();
+        mainThread.stop();
         close();
     }
 }
