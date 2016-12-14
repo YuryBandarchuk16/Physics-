@@ -7,6 +7,8 @@ import java.awt.*;
  */
 public class Ball {
 
+    public int hitsCount;
+
     private double r;
     private Color color;
 
@@ -16,6 +18,7 @@ public class Ball {
     public double G = 9.8;
 
     public Ball(double x, double y) {
+        hitsCount = 0;
         this.x = x;
         this.y = y;
         this.r = 10.0;

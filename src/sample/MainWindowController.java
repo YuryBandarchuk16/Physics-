@@ -8,8 +8,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.VBoxBuilder;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,6 +24,9 @@ import sample.matchParser.ParserRunner;
 public class MainWindowController {
 
     public static double G = 9.8;
+
+    @FXML
+    private ColorPicker graphColor, ballColor;
 
     private void createAlert(String textButton, String text) {
         Stage dialogStage = new Stage();
@@ -59,7 +64,7 @@ public class MainWindowController {
             }
             if (character == 'x') continue;
             if (character == '!') {
-                createAlert("OK", "This formula contains fobidden characters (exclamation sign)!");
+                createAlert("OK", "This formula contains forbidden characters (exclamation sign)!");
             }
             // to be continued
         }
@@ -67,7 +72,17 @@ public class MainWindowController {
         MainWindow.sandBox.graphIsReadyToBeDrawn = true;
         MainWindow.sandBox.reInit();
         MainWindow.sandBox.repaint();
+        MainWindow.sandBox.ballColor = getColor(ballColor);
+        MainWindow.sandBox.graphColor = getColor(graphColor);
         MainWindow.sandBox.balls.clear();
+    }
+
+    public java.awt.Color getColor(ColorPicker picker) {
+        Color awtColor = picker.getValue();
+        double r = awtColor.getRed() * 255.0;
+        double g = awtColor.getGreen() * 255.0;
+        double b = awtColor.getBlue() * 255.0;
+        return new java.awt.Color((int)r, (int)g, (int)b);
     }
 
     @FXML

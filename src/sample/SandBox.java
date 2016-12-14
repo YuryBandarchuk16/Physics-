@@ -16,11 +16,16 @@ import java.util.ArrayList;
  */
 public class SandBox extends JFrame implements Runnable {
 
+    public Color ballColor, graphColor;
+
+    private final double REM_ENERGY = 0.95;
+    private final double ADD_ENERGY = 1.10;
+
     private MatchParser matchParser;
 
     private final double X_RANGE = 10.0;
     private final double Y_RANGE = 100.0;
-    private final double RANGE_STEP = 0.06;
+    private final double RANGE_STEP = 0.07;
 
     public boolean hasParsed = false;
 
@@ -125,8 +130,12 @@ public class SandBox extends JFrame implements Runnable {
 
     public void reInit() {
         hasParsed = false;
-        cx.clear();
-        cy.clear();
+        if (cx != null) {
+            cx.clear();
+        }
+        if (cy != null) {
+            cy.clear();
+        }
     }
 
     public void paint(Graphics g) {
@@ -156,7 +165,7 @@ public class SandBox extends JFrame implements Runnable {
                 }
             }
             for (int i = 1; i < cx.size(); i++) {
-                drawLittleSegment(cx.get(i - 1), cy.get(i - 1), cx.get(i), cy.get(i), Color.CYAN, true);
+                drawLittleSegment(cx.get(i - 1), cy.get(i - 1), cx.get(i), cy.get(i), graphColor, true);
             }
         }
         for (Ball ball : balls) {
@@ -173,6 +182,7 @@ public class SandBox extends JFrame implements Runnable {
             double leftX = x - 0.1;
             double rightX = x + 0.1;
             double that_x = 0.0;
+            double that_y = 0.0;
             for (double tempX = leftX; tempX <= rightX; tempX += 0.03) {
                 gy = 0.0;
                 matchParser.setVariable("X", tempX);
@@ -188,26 +198,120 @@ public class SandBox extends JFrame implements Runnable {
                 }
             }
             if (minDistance <= ball.getR() + 0.7) {
-                ball.setVx(0);
-                ball.setVy(0);
-                ball.G = 0.0;
-                /*
+
+                ball.hitsCount += 1;
+
+                if (ball.hitsCount == 10) {
+                    ball.hitsCount = 0;
+                    ball.setVy(ball.getVy() * ADD_ENERGY);
+                    ball.setVx(ball.getVx() * ADD_ENERGY);
+                }
+
+                double x0 = -ball.getVx();
+                double y0 = -ball.getVy();
+                double lx = that_x - 0.0001;
+                double rx = that_x + 0.0001;
+                double bx = 0.0, by = 0.0;
+                matchParser.setVariable("X", lx);
+                try {
+                    bx = matchParser.Parse(ParserRunner.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                matchParser.setVariable("X", rx);
+                try {
+                    by = matchParser.Parse(ParserRunner.getText());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                bx = convertY(bx);
+                by = convertY(by);
+                lx = convertX(lx);
+                rx = convertX(rx);
+                double oy = by - bx;
+                double ox = rx - lx;
+
+                double ax = x0;
+                double ay = y0;
+
+                double scalar = ox * ax + oy * ay;
+                scalar /= (getLen(ax, ay) * getLen(ox, oy));
+                double angle = Math.acos(scalar);
+
+                // не забудь потратить энергию
+
+                double prevLen = getLen(x0, y0);
+
+                double new_vx = getRotatedX(x0, y0, angle * 2.0 + Math.PI);
+                double new_vy = getRotatedY(x0, y0, angle * 2.0 + Math.PI);
+                double cur_len = getLen(new_vx, new_vy);
+                new_vx /= cur_len;
+                new_vy /= cur_len;
+
+                new_vx = (new_vx * cur_len * REM_ENERGY);
+                new_vy = (new_vy * cur_len * REM_ENERGY);
 
 
-                double x0 = ball.getVx();
-                double y0 = ball.getVy();
-                double lx = convertX(that_x - 0.0001);
-                double rx = convertX(that_x + 0.0001);
-                that_x = convertX(that_x);
+                ball.setVx(new_vx);
+                ball.setVy(new_vy);
 
-                */
+
             }
             Color currentColor = this.graphics.getColor();
             Ellipse2D.Double ellipse2D = new Ellipse2D.Double(ball.getCx(), ball.getCy(), ball.getR(), ball.getR());
-            this.graphics.setColor(ball.getColor());
+            this.graphics.setColor(ballColor);
             this.graphics.fill(ellipse2D);
             this.graphics.setColor(currentColor);
         }
+        for (int i = 0; i < balls.size(); i++) {
+            double curR = balls.get(i).getR() + 0.00001;
+            double fx = balls.get(i).getCx();
+            double fy = balls.get(i).getCy();
+            for (int j = i + 1; j < balls.size(); j++) {
+                double sx = balls.get(j).getCx();
+                double sy = balls.get(j).getCy();
+                if (getDistance(fx, fy, sx, sy) <= curR) {
+                    System.out.println("!");
+                    double fvx = balls.get(i).getVx();
+                    double fvy = balls.get(i).getVy();
+                    double svx = balls.get(j).getVx();
+                    double svy = balls.get(j).getVy();
+                    double v1Minusv2X = fvx - svx;
+                    double v1Minusv2Y = fvy - svy;
+                    double frx = balls.get(i).getCx();
+                    double fry = balls.get(i).getCy();
+                    double srx = balls.get(j).getCx();
+                    double sry = balls.get(j).getCy();
+                    double deltaRx = frx - srx;
+                    double deltaRy = fry - sry;
+                    double value = getScalarProduct(v1Minusv2X, v1Minusv2Y, deltaRx, deltaRy);
+                    value /= (0.7 * curR * curR);
+                    deltaRx *= value;
+                    deltaRy *= value;
+                    balls.get(i).setVx(fvx - deltaRx);
+                    balls.get(i).setVy(fvy - deltaRy);
+                    balls.get(j).setVx(svx + deltaRx);
+                    balls.get(j).setVy(svy + deltaRy);
+                }
+            }
+        }
+    }
+
+    public double getScalarProduct(double ax, double ay, double bx, double by) {
+        return (ax * bx + ay * by);
+    }
+
+
+    public double getLen(double x, double y) {
+        return Math.sqrt(x * x + y * y);
+    }
+
+    public double getRotatedX(double x, double y, double alpha) {
+        return x * Math.cos(alpha) - y * Math.sin(alpha);
+    }
+
+    public double getRotatedY(double x, double y, double alpha) {
+        return x * Math.sin(alpha) + y * Math.cos(alpha);
     }
 
     private double getDistance(double x1, double y1, double x2, double y2) {

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ColorPicker?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
@@ -8,29 +9,18 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #B0C4DE;" xmlns="http://javafx.com/javafx/8.0.65" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.MainWindowController">
    <children>
-      <Button fx:id="backButton" layoutX="241.0" layoutY="316.0" mnemonicParsing="false" onAction="#backButtonClicked" prefHeight="30.0" prefWidth="120.0" text="Назад" />
-      <Button layoutX="175.0" layoutY="170.0" mnemonicParsing="false" onAction="#drawButtonClicked" prefHeight="30.0" prefWidth="250.0" text="Нарисовать" />
+      <Button fx:id="backButton" layoutX="241.0" layoutY="316.0" mnemonicParsing="false" onAction="#backButtonClicked" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;" text="Назад" />
+      <Button layoutX="175.0" layoutY="170.0" mnemonicParsing="false" onAction="#drawButtonClicked" prefHeight="30.0" prefWidth="250.0" style="-fx-background-color: #F0F8FF;" text="Нарисовать" />
       <TextField fx:id="textField" layoutX="217.0" layoutY="228.0" />
-      <Text layoutX="29.0" layoutY="45.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Введите формулу в виде: ... + &lt;функция&gt;(&lt;коэф.&gt;*x^[степень] + ....) + ..." wrappingWidth="543.06591796875">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
-      <Text layoutX="29.0" layoutY="81.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Например: 3*x^(2)+x^(1)-2*x^(3)" wrappingWidth="431.0659110546112">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
       <Text layoutX="146.0" layoutY="249.0" strokeType="OUTSIDE" strokeWidth="0.0" text="H(x) =">
          <font>
             <Font size="20.0" />
          </font>
       </Text>
-      <Button layoutX="241.0" layoutY="271.0" mnemonicParsing="false" onAction="#stopClicked" prefHeight="30.0" prefWidth="120.0" text="Стоп" />
-      <Text layoutX="29.0" layoutY="117.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Например: sin(cos(3*x^(2))+x^(1))-2*x^(1)" wrappingWidth="431.0659110546112">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Text>
+      <Button layoutX="241.0" layoutY="271.0" mnemonicParsing="false" onAction="#stopClicked" prefHeight="30.0" prefWidth="120.0" style="-fx-background-color: #F0F8FF;" text="Стоп" />
+      <ColorPicker fx:id="graphColor" layoutX="36.0" layoutY="62.0" style="-fx-background-color: #F0F8FF;" />
+      <ColorPicker fx:id="ballColor" layoutX="412.0" layoutY="62.0" style="-fx-background-color: #F0F8FF;" />
+      <Text layoutX="29.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Выберите цвет графика" />
+      <Text layoutX="405.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Выберите цвет шариков" />
    </children>
 </AnchorPane>
