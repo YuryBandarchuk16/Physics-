@@ -18,8 +18,11 @@ public class SandBox extends JFrame implements Runnable {
 
     public Color ballColor, graphColor;
 
-    private final double REM_ENERGY = 0.95;
-    private final double ADD_ENERGY = 1.10;
+    private final double REM_ENERGY = 0.91;
+    private final double ADD_ENERGY = 1.03;
+
+    private double FX = 70.0;
+    private double FY = 70.0;
 
     private MatchParser matchParser;
 
@@ -168,6 +171,23 @@ public class SandBox extends JFrame implements Runnable {
                 drawLittleSegment(cx.get(i - 1), cy.get(i - 1), cx.get(i), cy.get(i), graphColor, true);
             }
         }
+        if (balls.size() > 0) {
+            int idx = balls.size() - 1;
+            Ball lastBall = balls.get(idx);
+            double vx = lastBall.getVx();
+            double vy = lastBall.getVy();
+            double v = lastBall.getV();
+            vx /= v;
+            vy /= v;
+            vx *= 50;
+            vy *= 50;
+            drawLittleSegment(FX, FY, FX + vx, FY + vy, Color.BLUE, true);
+            Ellipse2D.Double ellipse2D = new Ellipse2D.Double(FX - 5.0, FY - 5.0, 10.0, 10.0);
+            Color currentColor = this.graphics.getColor();
+            this.graphics.setColor(Color.BLUE);
+            this.graphics.fill(ellipse2D);
+            this.graphics.setColor(currentColor);
+        }
         for (Ball ball : balls) {
             double x = convertXX(ball.getX());
             double y = ball.getY();
@@ -197,11 +217,15 @@ public class SandBox extends JFrame implements Runnable {
                     that_x = tempX;
                 }
             }
-            if (minDistance <= ball.getR() + 0.7) {
+            if (minDistance <= ball.getR() + 0.6) {
+
+                if (ball.getV() < 1) {
+                    ball.canMove = false;
+                }
 
                 ball.hitsCount += 1;
 
-                if (ball.hitsCount == 10) {
+                if (ball.hitsCount == 15) {
                     ball.hitsCount = 0;
                     ball.setVy(ball.getVy() * ADD_ENERGY);
                     ball.setVx(ball.getVx() * ADD_ENERGY);
@@ -271,6 +295,7 @@ public class SandBox extends JFrame implements Runnable {
                 double sx = balls.get(j).getCx();
                 double sy = balls.get(j).getCy();
                 if (getDistance(fx, fy, sx, sy) <= curR) {
+                    modify(balls.get(i), balls.get(j));
                     System.out.println("!");
                     double fvx = balls.get(i).getVx();
                     double fvy = balls.get(i).getVy();
@@ -288,12 +313,27 @@ public class SandBox extends JFrame implements Runnable {
                     value /= (0.7 * curR * curR);
                     deltaRx *= value;
                     deltaRy *= value;
+                    if (Math.abs( (fvx - deltaRx) - (svx - deltaRx)) <= 1e-5) {
+                        svx += 1.0;
+                    }
+                    if (Math.abs( (fvy - deltaRy) - (svy - deltaRy)) <= 1e-5) {
+                        svy += 1.0;
+                    }
                     balls.get(i).setVx(fvx - deltaRx);
                     balls.get(i).setVy(fvy - deltaRy);
                     balls.get(j).setVx(svx + deltaRx);
                     balls.get(j).setVy(svy + deltaRy);
+                    balls.get(i).canMove = true;
+                    balls.get(j).canMove = true;
                 }
             }
+        }
+    }
+
+    private void modify(Ball a, Ball b) {
+        if (Math.abs(a.getVx() - b.getVx()) <= 1 && Math.abs(a.getVy() - b.getVy()) <= 1) {
+            a.setVx(a.getVx() * -1);
+            a.setVy(a.getVy() * -1);
         }
     }
 
@@ -338,7 +378,7 @@ public class SandBox extends JFrame implements Runnable {
         long currentTime = System.currentTimeMillis();
         while (true) {
             try {
-                Thread.sleep(75L);
+                Thread.sleep(63L);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }

@@ -7,6 +7,8 @@ import java.awt.*;
  */
 public class Ball {
 
+    public boolean canMove;
+
     public int hitsCount;
 
     private double r;
@@ -18,6 +20,7 @@ public class Ball {
     public double G = 9.8;
 
     public Ball(double x, double y) {
+        canMove = true;
         hitsCount = 0;
         this.x = x;
         this.y = y;
@@ -67,14 +70,19 @@ public class Ball {
         this.y = y;
     }
 
+    public double getV() {
+        return Math.sqrt(vx * vx + vy * vy);
+    }
+
     private void prepareForMove(double t) {
-        vy = vy + G * t;
+         vy = vy + G * t;
     }
 
     public void move(double t) {
         prepareForMove(t);
-        x = x + vx * t;
-        y = y + vy * t;
+        if (!canMove) return;
+        x = x + vx * t * 0.93;
+        y = y + vy * t * 0.93;
     }
 
     public double getR() {
